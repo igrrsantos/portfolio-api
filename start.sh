@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# Usa echo pra DEBUGAR
-echo "PORT recebido: $PORT"
-
-# Força o valor ser um número (fallback)
 PORT=${PORT:-3000}
+echo "Iniciando servidor em porta $PORT com ruby config.ru"
 
-exec bundle exec rails server -b 0.0.0.0 -p "$PORT"
+exec bundle exec ruby config.ru -p $PORT -o 0.0.0.0
