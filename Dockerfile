@@ -12,9 +12,6 @@ COPY . .
 # Instala bundler e as gems
 RUN gem install bundler && bundle install
 
-# Prepara o banco
-RUN bundle exec rake db:migrate || true
-
 # Expõe a porta
 EXPOSE 3000
 
