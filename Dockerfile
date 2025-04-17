@@ -16,4 +16,5 @@ RUN gem install bundler && bundle install
 EXPOSE 3000
 
 # Comando de inicialização
-CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+CMD ["bundle", "exec", "ruby", "config.ru", "-p", "3000", "-o", "0.0.0.0"]
+
