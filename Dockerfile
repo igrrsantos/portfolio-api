@@ -16,5 +16,4 @@ RUN gem install bundler && bundle install
 EXPOSE 3000
 
 # Comando de inicialização
-CMD ["bundle", "exec", "ruby", "config.ru", "-p", "3000", "-o", "0.0.0.0"]
-
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
