@@ -1,5 +1,9 @@
 #!/bin/bash
 
-echo "Iniciando servidor Rails na porta 3000 (temporário)"
+# Usa echo pra DEBUGAR
+echo "PORT recebido: $PORT"
 
-bundle exec rails server -b 0.0.0.0 -p 3000
+# Força o valor ser um número (fallback)
+PORT=${PORT:-3000}
+
+exec bundle exec rails server -b 0.0.0.0 -p "$PORT"
