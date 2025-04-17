@@ -12,8 +12,7 @@ COPY . .
 # Instala bundler e as gems
 RUN gem install bundler && bundle install
 
-# Prepara assets e banco
-RUN bundle exec rake assets:precompile || true
+# Prepara o banco
 RUN bundle exec rake db:migrate || true
 
 # Expõe a porta
