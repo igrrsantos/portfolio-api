@@ -12,8 +12,11 @@ COPY . .
 # Instala bundler e as gems
 RUN gem install bundler && bundle install
 
+RUN mkdir -p tmp/pids
+
 # Expõe a porta
 EXPOSE 3000
 
 # Comando de inicialização
+
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
