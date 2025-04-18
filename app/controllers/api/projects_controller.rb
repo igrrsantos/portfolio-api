@@ -1,7 +1,7 @@
 class Api::ProjectsController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:public_index]
   before_action :authenticate_user!
   before_action :set_project, only: [:show, :update, :destroy]
+  skip_before_action :authenticate_user!, only: [:public_index]
 
   def index
     if current_user
