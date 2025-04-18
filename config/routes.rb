@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     get 'profile', to: 'profile#show'
 
     resources :projects, only: [:index, :create, :show, :destroy, :update]
+    get '/public/projects', to: 'projects#public_index'
     resources :tech_tags, only: [:index]
   end
 

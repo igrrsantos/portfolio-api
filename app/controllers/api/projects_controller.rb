@@ -1,4 +1,5 @@
 class Api::ProjectsController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:public_index]
   before_action :authenticate_user!
   before_action :set_project, only: [:show, :update, :destroy]
 
@@ -14,6 +15,20 @@ class Api::ProjectsController < ApplicationController
     else
       render json: { error: 'Não autenticado' }, status: :unauthorized
     end
+  end
+
+  def public_index
+    projects = Project.includes(:tech_tags, image_attachment: :blob).all
+
+    render json: projects.map { |project|
+      {
+        id: project.id,
+        title: project.title,
+        description: project.description,
+        image_url: project.image.attached? ? url_for(project.image) : nil,
+        tech_tags: project.tech_tags.map(&:name)
+      }
+    }
   end
 
   def show
