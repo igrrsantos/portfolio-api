@@ -1,22 +1,23 @@
+# Use imagem oficial do Ruby
 FROM ruby:3.2.2
 
-# Instala dependências básicas
+# Instala dependências do sistema
 RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
 
-# Cria diretório da app
+# Cria diretório do app
 WORKDIR /app
 
-# Copia os arquivos
+# Copia arquivos
 COPY . .
 
-# Instala bundler e as gems
-RUN gem install bundler && bundle install
+# Instala gems
+RUN bundle install
 
-RUN mkdir -p tmp/pids
+# ✅ Cria e migra o banco automaticamente
+RUN bundle exec rails db:create db:migrate
 
-# Expõe a porta
-EXPOSE 3000
+# Porta que o Railway usa
+EXPOSE 8080
 
-# Comando de inicialização
-
+# Comando padrão de inicialização
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
