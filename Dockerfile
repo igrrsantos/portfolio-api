@@ -13,9 +13,6 @@ COPY . .
 # Instala gems
 RUN bundle install
 
-# ✅ Cria e migra o banco automaticamente
-RUN bundle exec rails db:create db:migrate
-
 # Porta que o Railway usa
 EXPOSE 8080
 
