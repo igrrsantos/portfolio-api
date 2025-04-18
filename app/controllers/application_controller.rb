@@ -2,6 +2,7 @@ class ApplicationController < ActionController::API
   respond_to :json
 
   before_action :authenticate_user!
+  before_action :handle_options_request
 
   def authenticate_user!
     auth_header = request.headers['Authorization']
@@ -26,6 +27,10 @@ class ApplicationController < ActionController::API
     rescue JWT::DecodeError, ActiveRecord::RecordNotFound
       render json: { error: 'Token inválido' }, status: :unauthorized
     end
+  end
+
+  def handle_options_request
+  head :ok if request.method == 'OPTIONS'
   end
 
   def current_user

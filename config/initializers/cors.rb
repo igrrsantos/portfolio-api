@@ -2,7 +2,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins '*'  # ou substitua por 'http://localhost:5173' em produção use domínio fixo
+    origins '*' # ou coloque seu domínio específico
 
     resource '*',
       headers: :any,
