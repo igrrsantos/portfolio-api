@@ -14,9 +14,6 @@ RUN bundle install
 # Copie todo o projeto
 COPY . .
 
-# Pré-compile os assets (se necessário)
-RUN bundle exec rails assets:precompile
-
 # Adicione um script para executar migrações e iniciar o servidor
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
