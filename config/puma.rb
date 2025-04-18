@@ -2,6 +2,15 @@
 # are invoked here are part of Puma's configuration DSL. For more information
 # about methods provided by the DSL, see https://puma.io/puma/Puma/DSL.html.
 
+# Adicione esta linha no início do arquivo
+require 'socket'
+
+# Adicione no final do arquivo:
+on_restart do
+  puts "Liberando porta 3000..."
+  system("fuser -k 3000/tcp || true")
+end
+
 # Puma can serve each request in a thread from an internal thread pool.
 # The `threads` method setting takes two numbers: a minimum and maximum.
 # Any libraries that use thread pools should be configured to match

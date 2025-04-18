@@ -21,4 +21,5 @@ RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 
 # Comando padrão (substitua se necessário)
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
 CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0", "-p", "3000"]
