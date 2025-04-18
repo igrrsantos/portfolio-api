@@ -3,6 +3,7 @@ FROM ruby:3.2.2
 
 # Instale dependências do sistema
 RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs postgresql-client
+RUN apt-get update && apt-get install -y postgresql-client awscli
 
 # Crie e defina o diretório de trabalho
 WORKDIR /app
