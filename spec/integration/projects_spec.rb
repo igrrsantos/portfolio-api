@@ -16,9 +16,12 @@ RSpec.describe 'Projects API', type: :request do
         let!(:projects) { create_list(:project, 3, user: user) }
 
         let(:Authorization) do
-          token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
+          payload = { user_id: user.id, exp: 24.hours.from_now.to_i }
+          secret = ENV['JWT_SECRET_KEY'] || Rails.application.credentials.secret_key_base
+          token = JWT.encode(payload, secret, 'HS256')
           "Bearer #{token}"
         end
+
 
         run_test!
       end
@@ -39,9 +42,12 @@ RSpec.describe 'Projects API', type: :request do
       response '201', 'projeto criado com sucesso' do
         let(:user) { create(:user) }
         let(:Authorization) do
-          token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
+          payload = { user_id: user.id, exp: 24.hours.from_now.to_i }
+          secret = ENV['JWT_SECRET_KEY'] || Rails.application.credentials.secret_key_base
+          token = JWT.encode(payload, secret, 'HS256')
           "Bearer #{token}"
         end
+
 
         let(:'project[title]') { 'Portfólio Técnico' }
         let(:'project[description]') { 'Aplicação Rails API + React' }
@@ -76,9 +82,12 @@ RSpec.describe 'Projects API', type: :request do
         let(:id) { project.id }
 
         let(:Authorization) do
-          token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
+          payload = { user_id: user.id, exp: 24.hours.from_now.to_i }
+          secret = ENV['JWT_SECRET_KEY'] || Rails.application.credentials.secret_key_base
+          token = JWT.encode(payload, secret, 'HS256')
           "Bearer #{token}"
         end
+
 
         let(:'project[title]') { 'Projeto Atualizado' }
         let(:'project[description]') { 'Nova descrição' }
@@ -92,9 +101,12 @@ RSpec.describe 'Projects API', type: :request do
         let(:user) { create(:user) }
         let(:id) { 'invalid' }
         let(:Authorization) do
-          token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
+          payload = { user_id: user.id, exp: 24.hours.from_now.to_i }
+          secret = ENV['JWT_SECRET_KEY'] || Rails.application.credentials.secret_key_base
+          token = JWT.encode(payload, secret, 'HS256')
           "Bearer #{token}"
         end
+
 
         run_test!
       end
@@ -114,9 +126,12 @@ RSpec.describe 'Projects API', type: :request do
         let(:id) { project.id }
 
         let(:Authorization) do
-          token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
+          payload = { user_id: user.id, exp: 24.hours.from_now.to_i }
+          secret = ENV['JWT_SECRET_KEY'] || Rails.application.credentials.secret_key_base
+          token = JWT.encode(payload, secret, 'HS256')
           "Bearer #{token}"
         end
+
 
         run_test!
       end
@@ -126,7 +141,9 @@ RSpec.describe 'Projects API', type: :request do
         let(:id) { 'inexistente' }
 
         let(:Authorization) do
-          token = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first
+          payload = { user_id: user.id, exp: 24.hours.from_now.to_i }
+          secret = ENV['JWT_SECRET_KEY'] || Rails.application.credentials.secret_key_base
+          token = JWT.encode(payload, secret, 'HS256')
           "Bearer #{token}"
         end
 

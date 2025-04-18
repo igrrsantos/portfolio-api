@@ -1,33 +1,32 @@
 class Api::ProjectsController < ApplicationController
-  before_action :authenticate_user_from_token!
+  before_action :authenticate_user!
   before_action :set_project, only: [:show, :update, :destroy]
 
   def index
-    projects = current_user.projects
-
-    if params[:tech].present?
-      projects = projects.joins(:tech_tags).where(tech_tags: { name: params[:tech] }).distinct
+    if current_user
+      projects = current_user.projects.includes(:tech_tags).map do |project|
+        project.as_json(only: [:id, :title, :description, :created_at, :updated_at]).merge(
+          image_url: project.image.attached? ? url_for(project.image) : nil,
+          tech_tags: project.tech_tag_names
+        )
+      end
+      render json: projects
+    else
+      render json: { error: 'Não autenticado' }, status: :unauthorized
     end
-
-    # Paginação padrão
-    page = (params[:page] || 1).to_i
-    per_page = (params[:per_page] || 10).to_i
-
-    paginated = projects.paginate(page: page, per_page: per_page)
-
-    render json: {
-      current_page: paginated.current_page,
-      total_pages: paginated.total_pages,
-      total_entries: paginated.total_entries,
-      projects: paginated.map { |p| project_with_tags(p) }
-    }
   end
 
-
   def show
-    render json: project.as_json.merge({
-      image_url: project.image.attached? ? url_for(project.image) : nil
-    })
+    project = current_user.projects.includes(:tech_tags).find_by(id: params[:id])
+
+    if project
+      render json: project.as_json(only: [:id, :title, :description, :created_at, :updated_at]).merge(
+        image_url: project.image.attached? ? url_for(project.image) : nil,
+        tech_tags: project.tech_tags.pluck(:name)
+      )
+    else
+      render json: { error: 'Projeto não encontrado' }, status: :not_found
+    end
   end
 
   def create
@@ -41,16 +40,30 @@ class Api::ProjectsController < ApplicationController
   end
 
   def update
-    if @project.update(project_params)
-      render json: @project
+    project = current_user.projects.find_by(id: params[:id])
+
+    if project
+      if params[:project][:tech_tags]
+        tag_names = params[:project].delete(:tech_tags)
+        tags = TechTag.where(name: tag_names)
+        project.tech_tags = tags
+      end
+
+      project.update(project_params)
+      render json: project
     else
-      render json: { errors: @project.errors.full_messages }, status: :unprocessable_entity
+      render json: { error: 'Projeto não encontrado' }, status: :not_found
     end
   end
 
   def destroy
-    @project.destroy
-    head :no_content
+    project = current_user.projects.find_by(id: params[:id])
+    if project
+      project.destroy
+      render json: { message: 'Projeto excluído com sucesso' }, status: :ok
+    else
+      render json: { error: 'Projeto não encontrado' }, status: :not_found
+    end
   end
 
   private
@@ -72,14 +85,23 @@ class Api::ProjectsController < ApplicationController
     })
   end
 
-
   def set_project
     @project = current_user.projects.find_by(id: params[:id])
     return head :not_found unless @project
   end
 
   def project_params
-    # binding.pry
-    params.require(:project).permit(:title, :description, :tech_stack, :image)
+    params.require(:project).permit(:title, :description, :image, tech_tag_ids: [])
+  end
+
+  def project_response(project)
+    image_url = project.image.attached? ? url_for(project.image) : nil
+
+    {
+      id: project.id,
+      title: project.title,
+      description: project.description,
+      image_url: image_url
+    }
   end
 end

@@ -8,7 +8,14 @@ RSpec.describe 'Profile API', type: :request do
       produces 'application/json'
 
       response '200', 'usuário autenticado' do
-        let(:Authorization) { "Bearer #{get_token}" }
+        let!(:user) { create(:user) }
+        let(:Authorization) do
+          payload = { user_id: user.id, exp: 24.hours.from_now.to_i }
+          secret = ENV['JWT_SECRET_KEY'] || Rails.application.credentials.secret_key_base
+          token = JWT.encode(payload, secret, 'HS256')
+          "Bearer #{token}"
+        end
+
 
         run_test!
       end

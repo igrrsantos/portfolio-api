@@ -312,6 +312,7 @@ DEPENDENCIES
   devise-jwt
   factory_bot_rails
   faker
+  jwt
   pg (~> 1.1)
   pry (~> 0.15.0)
   puma (>= 5.0)

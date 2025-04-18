@@ -3,13 +3,17 @@ Rails.application.routes.draw do
   mount Rswag::Api::Engine => '/api-docs'
   namespace :api do
     post 'signup', to: 'registrations#create'
+
     post 'login', to: 'sessions#create'
     delete 'logout', to: 'sessions#destroy'
+    get 'validate_token', to: 'sessions#validate_token' # Nova rota
 
     get 'profile', to: 'profile#show'
 
-    resources :projects
+    resources :projects, only: [:index, :create, :show, :destroy, :update]
+    resources :tech_tags, only: [:index]
   end
+
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

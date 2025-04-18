@@ -14,6 +14,7 @@ gem "puma", ">= 5.0"
 # Gem to authentication
 gem 'devise'
 gem 'devise-jwt'
+gem 'jwt'
 
 # Gem to paginate
 gem 'will_paginate', '~> 3.3'
